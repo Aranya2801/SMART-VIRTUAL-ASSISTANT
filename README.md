@@ -25,7 +25,7 @@ its features.Virtual assistants, which are a
 component of one of Artificial Intelligence's 
 (AI) fastest-growing fields, are now a staple of 
 practically every smart device, making them a 
-part of everyone's daily lives. The most wellknown ones include Alexa, Siri, Google 
+part of everyone's daily lives. The most well nown ones include Alexa, Siri, Google 
 Assistant, and Cortana, to name just a few. 
 Beyond these pre-made options, there are a 
 variety of technologies that enable the 
