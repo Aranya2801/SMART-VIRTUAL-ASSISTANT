@@ -1,37 +1,27 @@
+# Secrets — never commit these
+config/config.json
+
 # Python
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.egg
+.Python
+venv/
+env/
 *.egg-info/
 dist/
 build/
-.eggs/
-
-# Virtual Environment
-venv/
-env/
-.venv/
-.env/
-
-# Secrets — NEVER COMMIT
-config/config.json
 
 # Logs
 *.log
 assistant.log
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Screenshots produced at runtime
+screenshot_*.png
 
-# OS
+# macOS
 .DS_Store
-Thumbs.db
 
-# Backup files
-backup*.py
-2.py
+# Windows
+Thumbs.db
