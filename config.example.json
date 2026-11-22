@@ -1,0 +1,15 @@
+{
+  "mode": "text",
+  "language": "en-IN",
+  "default_city": "Kolkata",
+  "news_country": "in",
+
+  "weather_api_key": "",
+  "news_api_key": "",
+  "email": "",
+  "email_password": "",
+
+  "voice_rate": 170,
+  "voice_volume": 0.95,
+  "voice_index": 0
+}

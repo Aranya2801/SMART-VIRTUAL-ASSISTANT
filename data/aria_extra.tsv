@@ -1,0 +1,173 @@
+# Extra training utterances for intents that CLINC150 doesn't cover.
+# Written by hand for this project. Format: intent<TAB>text
+# Kept out of every benchmark number in docs/RESULTS.md.
+news	what's the news today
+news	read me the headlines
+news	any news
+news	what's happening in the world
+news	top stories please
+news	tell me the latest news
+news	give me today's headlines
+news	what are the headlines in india
+news	news update
+news	catch me up on the news
+news	what's in the news this morning
+news	anything big in the news
+news	read the top five headlines
+news	i want to hear the news
+news	what's trending in the news
+news	headlines
+news	breaking news
+news	what happened today
+news	can you read the news for me
+news	morning news briefing
+news	what are today's top stories
+news	latest headlines from india
+news	brief me on current events
+news	what's going on in the news right now
+news	play the news
+open_website	open youtube
+open_website	open google
+open_website	open github
+open_website	launch gmail
+open_website	go to linkedin
+open_website	open stack overflow
+open_website	open reddit for me
+open_website	can you open netflix
+open_website	visit amazon
+open_website	open whatsapp web
+open_website	take me to youtube
+open_website	open instagram
+open_website	open the github website
+open_website	open spotify
+open_website	open kiit.ac.in
+open_website	open wikipedia
+open_website	launch youtube
+open_website	open my email
+open_website	go to github.com
+open_website	open twitter
+open_website	pull up linkedin
+open_website	open facebook
+open_website	open the website stackoverflow
+open_website	please open google
+open_website	open up reddit
+web_search	search for python tutorials
+web_search	google best laptops under 60000
+web_search	search the web for cheap flights to delhi
+web_search	look up how to make cold coffee
+web_search	search how to fix pip install error
+web_search	google machine learning internships
+web_search	can you search for kiit placement statistics
+web_search	search for restaurants near me
+web_search	search online for the iphone price
+web_search	google the cricket score
+web_search	search for gate exam syllabus
+web_search	look up train timings from howrah to bhubaneswar
+web_search	search for linear algebra lecture notes
+web_search	google how tall is mount everest
+web_search	search google for react hooks tutorial
+web_search	find me articles about transformers
+web_search	search for the nearest pharmacy
+web_search	search for flask documentation
+web_search	can you google that for me
+web_search	look up the meaning of serendipity online
+web_search	search for free online courses on data science
+web_search	google weather radar
+web_search	search for how to write a resume
+web_search	search youtube videos about recursion
+web_search	look up rutgers business school
+send_email	send an email
+send_email	compose an email
+send_email	write an email to my professor
+send_email	email rohan@example.com
+send_email	i want to send a mail
+send_email	send a mail to my manager
+send_email	draft an email
+send_email	can you email someone for me
+send_email	send email to aranya@example.com
+send_email	shoot an email to the team
+send_email	compose a new mail
+send_email	email my friend
+send_email	i need to send an email
+send_email	write a mail
+send_email	send a quick email
+send_email	email this to priya@gmail.com
+send_email	start a new email
+send_email	mail my teacher
+send_email	send an email saying i'll be late
+send_email	help me send an email
+screenshot	take a screenshot
+screenshot	screenshot
+screenshot	capture my screen
+screenshot	grab a screenshot
+screenshot	take a screen capture
+screenshot	save a screenshot
+screenshot	can you screenshot this
+screenshot	snap the screen
+screenshot	take a picture of the screen
+screenshot	capture the screen please
+screenshot	screen grab
+screenshot	take a screenshot of my desktop
+screenshot	print screen
+screenshot	screenshot my screen
+screenshot	save what's on my screen
+motivation	motivate me
+motivation	i need some motivation
+motivation	give me a motivational quote
+motivation	say something inspiring
+motivation	inspire me
+motivation	i'm feeling lazy, push me
+motivation	tell me a quote
+motivation	i need a pep talk
+motivation	give me some inspiration
+motivation	quote of the day
+motivation	cheer me up with a quote
+motivation	i don't feel like studying
+motivation	say something to keep me going
+motivation	motivational thought please
+motivation	help me get motivated
+motivation	any words of wisdom
+motivation	i need encouragement
+motivation	tell me something inspirational
+motivation	i'm tired of working, motivate me
+motivation	share an inspiring quote
+definition	who is alan turing
+definition	tell me about the taj mahal
+definition	wikipedia albert einstein
+definition	search wikipedia for black holes
+definition	who was rabindranath tagore
+definition	what is machine learning
+definition	tell me about kolkata
+definition	look up quantum computing on wikipedia
+definition	who is sundar pichai
+definition	what is photosynthesis
+definition	tell me about the french revolution
+definition	wikipedia python programming language
+definition	who invented the telephone
+definition	what is a neural network
+definition	tell me about mount everest
+definition	who was ada lovelace
+definition	what is the theory of relativity
+definition	look up the roman empire
+definition	tell me something about jupiter
+definition	who is the founder of microsoft
+reminder	remind me to call mom in 10 minutes
+reminder	remind me to drink water in an hour
+reminder	remind me to check the oven in 20 minutes
+reminder	remind me about the meeting in 30 minutes
+reminder	remind me to take my medicine at 9 pm
+reminder	in 15 minutes remind me to stretch
+reminder	remind me to submit the assignment at 11 pm
+reminder	set a reminder to call rahul in 2 hours
+reminder	remind me to leave for the station at 5 30
+reminder	remind me to switch off the geyser in 10 minutes
+goodbye	stop
+goodbye	exit
+goodbye	quit
+goodbye	stop listening
+goodbye	that's all for now
+goodbye	you can go now
+goodbye	shut down
+goodbye	close the assistant
+goodbye	i'm done
+goodbye	exit the program

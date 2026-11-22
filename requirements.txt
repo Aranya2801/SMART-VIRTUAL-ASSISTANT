@@ -1,48 +1,14 @@
-# ─────────────────────────────────────────────────────────────
-#  SMART VIRTUAL ASSISTANT — Requirements
-#  Python 3.10 – 3.12  |  Updated for 2025
-# ─────────────────────────────────────────────────────────────
+# core (text mode + intent model)
+requests>=2.31
+scikit-learn>=1.3
+joblib>=1.3
+numpy>=1.24
 
-# ── Core voice I/O ────────────────────────────────────────────
-SpeechRecognition==3.11.0        # was 3.10.1 — fixes Python 3.12 compatibility
-pyttsx3==2.90                    # unchanged; works on 3.12 if called from main thread
-PyAudio==0.2.14                  # was 0.2.13 — fixes portaudio header issues on 3.12
+# voice mode
+SpeechRecognition>=3.10
+pyttsx3>=2.90
+PyAudio>=0.2.13
 
-# ── NLP / Knowledge ───────────────────────────────────────────
-wikipedia==1.4.0                 # unchanged; still maintained
-
-# ── Web / APIs ────────────────────────────────────────────────
-requests==2.32.3                 # was 2.31.0 — security patches
-
-# REMOVED: newsapi-python==0.2.7
-#   Reason: package is effectively unmaintained; its internal use of
-#   requests broke silently with requests>=2.32. We now call the
-#   NewsAPI REST endpoint directly via `requests` in NewsModule.
-#   No extra package needed.
-
-# ── Optional (Windows volume control) ────────────────────────
-# Uncomment if you are on Windows and want volume up/down commands:
-# pycaw==20240410
-# comtypes==1.4.4
-
-# ── Optional (Windows screenshot) ────────────────────────────
-# Uncomment if you are on Windows:
-# Pillow==10.4.0
-
-# ─────────────────────────────────────────────────────────────
-#  INSTALL NOTES
-#
-#  macOS (Homebrew):
-#    brew install portaudio
-#    pip install -r requirements.txt
-#
-#  Ubuntu / Debian:
-#    sudo apt install python3-pyaudio portaudio19-dev espeak
-#    pip install -r requirements.txt
-#
-#  Windows:
-#    Download PyAudio wheel from:
-#    https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio
-#    pip install PyAudio‑0.2.14‑cpXXX‑win_amd64.whl
-#    pip install -r requirements.txt
-# ─────────────────────────────────────────────────────────────
+# optional
+# pillow          # screenshots
+# pycaw comtypes  # volume control on Windows
