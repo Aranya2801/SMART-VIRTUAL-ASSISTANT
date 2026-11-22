@@ -1,27 +1,24 @@
-# Secrets — never commit these
+# secrets
+config.json
 config/config.json
+.env
 
-# Python
+# downloaded data / trained models
+data/clinc150/
+models/
+
+# python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-.Python
+.venv/
 venv/
-env/
 *.egg-info/
-dist/
 build/
+dist/
+.pytest_cache/
+.ruff_cache/
 
-# Logs
+# misc
 *.log
-assistant.log
-
-# Screenshots produced at runtime
-screenshot_*.png
-
-# macOS
 .DS_Store
-
-# Windows
 Thumbs.db

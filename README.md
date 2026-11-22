@@ -1,404 +1,206 @@
-<div align="center">
+# ARIA: a small voice assistant that knows what it can't do
 
-<img src="https://readme-typing-svg.demolab.com?font=Orbitron&size=36&duration=3000&pause=800&color=00D4FF&center=true&vCenter=true&width=700&lines=SMART+VIRTUAL+ASSISTANT;A.R.I.A+%E2%80%94+AI+Voice+%26+Chat+Engine;Built+with+Python+%F0%9F%90%8D" alt="ARIA Typing SVG" />
+[![tests](https://github.com/Aranya2801/SMART-VIRTUAL-ASSISTANT/actions/workflows/ci.yml/badge.svg)](https://github.com/Aranya2801/SMART-VIRTUAL-ASSISTANT/actions/workflows/ci.yml)
 
-<br/>
+ARIA is a Python voice assistant that runs on your own laptop. It handles
+the usual things (time, weather, news, Wikipedia, reminders, alarms, timers,
+quick maths, opening sites, playing music, sending email) and, more
+importantly, it notices when you ask for something it *can't* do and says so
+instead of guessing.
 
-<img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white" />
-<img src="https://img.shields.io/badge/AI%20Powered-NLP%20%7C%20Speech-00D4FF?style=for-the-badge&logo=googleassistant&logoColor=white" />
-<img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge" />
-<img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" />
-<img src="https://img.shields.io/badge/Version-2.0.0-purple?style=for-the-badge" />
+It started as our 3rd-year minor project at KIIT in 2023. That version
+matched keywords in a long `if/elif` chain. This repo is a rewrite around a
+proper NLU pipeline, plus a set of experiments on CLINC150 to back up the
+design choices.
 
-<br/><br/>
+**Main results** (details in [docs/RESULTS.md](docs/RESULTS.md)):
 
-> **ARIA** *(Advanced Responsive Intelligent Assistant)* is a fully voice-driven, AI-powered personal assistant built in Python — designed for productivity, accessibility, and smart automation.
-
-<br/>
-
-```
-╔══════════════════════════════════════════════════════════╗
-║   🤖  ARIA — SMART VIRTUAL ASSISTANT  v2.0              ║
-║   Voice + Text Interface  |  Modular Architecture       ║
-║   News • Weather • Email • Alarms • Wikipedia & more    ║
-╚══════════════════════════════════════════════════════════╝
-```
-
-</div>
-
----
-
-## 📋 Table of Contents
-
-- [✨ Overview](#-overview)
-- [🚀 Features](#-features)
-- [🏗️ Architecture](#️-architecture)
-- [📸 Screenshots](#-screenshots)
-- [⚙️ Setup & Installation](#️-setup--installation)
-- [🔑 API Configuration](#-api-configuration)
-- [💬 Voice Commands Reference](#-voice-commands-reference)
-- [📁 Project Structure](#-project-structure)
-- [🧠 How It Works](#-how-it-works)
-- [🛠️ Technologies Used](#️-technologies-used)
-- [🔮 Future Roadmap](#-future-roadmap)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-
----
-
-## ✨ Overview
-
-ARIA is a **Smart Virtual Assistant** built to bridge the gap between humans and technology through natural voice interaction. Originally conceived to empower **visually impaired individuals** and **students**, ARIA has grown into a full-featured AI productivity companion.
-
-Unlike paid alternatives like Alexa or Cortana, ARIA is:
-- 🔓 **Open-source** and fully customizable
-- 🌐 **Multi-modal** — voice *and* text input
-- 🧩 **Modular** — plug in new skills easily
-- 🧠 **Smart** — routes commands using NLP intent matching
-- ⚡ **Fast** — minimal latency with threaded background tasks
-
----
-
-## 🚀 Features
-
-<table>
-<tr>
-<td>
-
-### 🎙️ Voice & NLP
-- Natural speech recognition (Google STT)
-- Human-like text-to-speech (pyttsx3)
-- Intent-based command routing
-- Ambient noise auto-calibration
-
-</td>
-<td>
-
-### 🌍 Information
-- Wikipedia smart search
-- Live weather (OpenWeatherMap API)
-- Top news headlines (NewsAPI)
-- Random facts & jokes engine
-
-</td>
-</tr>
-<tr>
-<td>
-
-### 📅 Productivity
-- Threaded reminders (non-blocking)
-- Alarm clock with AM/PM parsing
-- Current time & date narration
-- Google Search launcher
-
-</td>
-<td>
-
-### 🌐 Web & Apps
-- Open 10+ popular websites by voice
-- YouTube video search & play
-- Email composer & sender (Gmail SMTP)
-- Dynamic URL opening
-
-</td>
-</tr>
-<tr>
-<td>
-
-### 🧘 Wellbeing
-- Motivational quote engine (10+ quotes)
-- Joke teller with comedic timing
-- Inspirational message on demand
-
-</td>
-<td>
-
-### 🔧 System
-- Modular config via `config.json`
-- Structured logging to file + console
-- Error handling & graceful recovery
-- Voice mode / text mode toggle
-
-</td>
-</tr>
-</table>
-
----
-
-## 🏗️ Architecture
+- On the 18 CLINC150 intents ARIA supports, the original keyword router gets
+  **28.8%** of requests right. A TF-IDF (word + char n-gram) logistic
+  regression gets **89.6–93.6%**, depending on how it handles rejection.
+- Training an explicit "reject" class from *some* unsupported intents still
+  rejects **97.4%** of requests from 66 unsupported intents it never saw,
+  vs. 91.6% for a tuned confidence threshold.
+- Under simulated speech-recognition errors (30% of words corrupted),
+  word-only features lose 20 points of accuracy, word+char features 14, and
+  the class-balanced word+char model that ARIA ships with only 10.
+- ~1 ms per utterance on CPU, no GPU or cloud NLU needed.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    USER (Voice / Text)                       │
-└─────────────────────────────────┬───────────────────────────┘
-                                  │
-                    ┌─────────────▼────────────┐
-                    │   Speech Recognizer       │
-                    │   (SpeechRecognition)     │
-                    └─────────────┬────────────┘
-                                  │ query string
-                    ┌─────────────▼────────────┐
-                    │   Command Router          │
-                    │   route_command()         │
-                    └──┬──────────────────────┬─┘
-                       │                      │
-          ┌────────────▼──┐         ┌─────────▼────────────┐
-          │  Skill Module  │         │   Web / OS Action     │
-          │  (Weather,    │         │   (webbrowser, SMTP,  │
-          │   News, Wiki, │         │    OS commands)        │
-          │   Jokes, etc.)│         └─────────┬────────────┘
-          └────────────┬──┘                   │
-                       └──────────┬───────────┘
-                                  │
-                    ┌─────────────▼────────────┐
-                    │   Voice Engine            │
-                    │   (pyttsx3 TTS)           │
-                    └──────────────────────────┘
+you: what's the weather like in pune
+ARIA: In Pune it's 24 degrees with light rain. Humidity is 81 percent.
+you: remind me to call mom
+ARIA: When? For example 'in 20 minutes' or 'at 6 pm'.
+you: in 20 minutes
+ARIA: Okay, I'll remind you to call mom in 20 minutes.
+you: what's my credit card balance
+ARIA: I can't help with that one myself. Want me to search the web for it?
+you: no
+ARIA: No problem.
 ```
 
----
+## How it works
 
-## 📸 Screenshots
+```
+ mic ──► SpeechRecognition (Google STT, en-IN)
+                 │ text
+                 ▼
+        ┌──────────────────┐   intent + confidence
+        │ intent classifier│──────────────┐
+        │ TF-IDF word+char │              │ below threshold / "oos"
+        │ + logistic reg.  │              ▼
+        └──────────────────┘     "I can't do that, search the web?"
+                 │
+                 ▼
+        slot extraction (regex: city, duration, clock time, topic, ...)
+                 │
+                 ▼
+        dialogue manager ── missing slot? ask, wait for the next utterance
+                 │
+                 ▼
+        skill handlers ──► scheduler thread (reminders / alarms / timers)
+                 │
+                 ▼
+        TTS worker thread (pyttsx3) ──► speaker
+```
 
-| Voice Interaction | Terminal Output |
-|:-----------------:|:---------------:|
-| ![ss1](Screenshot%202023-04-27%20213238.jpg) | ![ss2](Screenshot%202023-04-27%20213320.jpg) |
+A few things that were broken in the old version and how they're handled now:
 
-| Wikipedia Search | Weather Fetch |
-|:---------------:|:-------------:|
-| ![ss3](Screenshot%202023-04-27%20213633.jpg) | ![ss4](Screenshot%202023-04-28%20124505.jpg) |
+| Problem in v2 | Now |
+|---|---|
+| Keyword matching: "stop" anywhere quit the app, "what is" always meant the calculator, unknown requests opened Google | Learned intent model with an out-of-scope class; web search only after you say yes |
+| `eval()` on whatever the user said for the calculator | `ast`-based evaluator that only allows numbers and arithmetic (`aria/calc.py`) |
+| Follow-up questions used `input()`, so voice mode needed a keyboard | Dialogue manager keeps the pending slot and fills it from the next utterance, spoken or typed |
+| Every reminder spawned a sleeping thread and called `pyttsx3` from it, which isn't thread-safe | One scheduler thread for all jobs; one TTS thread owns the engine and everything else queues text |
+| Alarms polled the clock every 30 s forever and couldn't be cancelled | Jobs can be listed ("what alarms do I have") and cancelled |
+| "open xyz" went to `https://www.xyz.com` | Known sites from a list, everything else goes through a search |
+| Volume/screenshot only worked on Linux via `os.system` | `pactl`/`amixer` on Linux, AppleScript on macOS, `pycaw` on Windows, Pillow for screenshots |
+| API keys hard-coded as placeholders in the source | Config file or `ARIA_*` environment variables |
+| Two diverging copies of the code (`assistant.py`, `src/assistant.py`), no tests | One package, 64 tests, CI |
 
----
+## Running it
 
-## ⚙️ Setup & Installation
-
-### Prerequisites
-
-- Python 3.10 or higher
-- A working microphone (for voice mode)
-- Internet connection (for APIs)
-
-### 1. Clone the Repository
+Needs Python 3.10+.
 
 ```bash
 git clone https://github.com/Aranya2801/SMART-VIRTUAL-ASSISTANT.git
 cd SMART-VIRTUAL-ASSISTANT
-```
-
-### 2. Create Virtual Environment
-
-```bash
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# macOS / Linux
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
-
-```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+
+python -m aria.train        # downloads CLINC150 (~2.5 MB) and trains the model, ~10 s
+python -m aria              # text mode
+python -m aria --voice      # microphone + speech
 ```
 
-> **Note for Linux users:** Install PortAudio before PyAudio:
-> ```bash
-> sudo apt-get install portaudio19-dev python3-dev
-> ```
+Voice mode needs PortAudio for the microphone and a TTS backend:
 
-### 4. Configure API Keys
+- Ubuntu/Debian: `sudo apt install portaudio19-dev espeak-ng`
+- macOS: `brew install portaudio`
+- Windows: `pip install pyaudio` usually just works now (wheels are on PyPI)
+
+If the mic or TTS can't start, ARIA drops back to text mode and tells you why.
+Add `--debug` to see the predicted intent, confidence and slots for each turn.
+
+### API keys
+
+Weather, news and email need credentials. Either export them:
 
 ```bash
-cp config/config.json config/config.json
-# Edit config/config.json with your keys (see below)
+export ARIA_WEATHER_API_KEY=...    # openweathermap.org, free tier is fine
+export ARIA_NEWS_API_KEY=...       # newsapi.org
+export ARIA_EMAIL=you@gmail.com
+export ARIA_EMAIL_PASSWORD=...     # a Gmail *app password*, not your real one
 ```
 
-### 5. Run ARIA
+or copy `config.example.json` to `config.json` and fill it in (it's
+git-ignored). Any setting in `aria/config.py` can be set either way, e.g.
+`ARIA_DEFAULT_CITY=Bhubaneswar`.
+
+## Things you can say
+
+| | examples |
+|---|---|
+| time / date | "what time is it", "what's the date today" |
+| weather | "weather in delhi", "will it rain tomorrow" (uses `default_city`) |
+| news | "read me the headlines" |
+| Wikipedia | "who was ada lovelace", "tell me about black holes" |
+| maths | "what is 15 percent of 240", "square root of 144", "12 times 7 plus 3" |
+| reminders | "remind me to drink water in 30 minutes", "what reminders do I have", "cancel all reminders" |
+| timers / alarms | "set a timer for 5 minutes", "wake me up at 6:30 am" |
+| web | "open github", "search for gate syllabus", "play lofi on youtube" |
+| system | "turn the volume down", "take a screenshot" |
+| email | "send an email" (asks for recipient, subject and body, then confirms) |
+| other | "tell me a joke", "fun fact", "motivate me", "what can you do", "bye" |
+
+Say "never mind" in the middle of a follow-up question to drop it.
+
+## Reproducing the experiments
 
 ```bash
-python src/assistant.py
+pip install -r requirements-dev.txt
+python experiments/run_benchmark.py          # full run, ~2-3 min
+python experiments/run_benchmark.py --quick  # 1 seed, fewer settings
+pytest
 ```
 
----
+Results go to `results/` and are written up in
+[docs/RESULTS.md](docs/RESULTS.md). CI runs the quick benchmark on every push
+so the numbers can't silently rot.
 
-## 🔑 API Configuration
-
-Edit `config/config.json`:
-
-```json
-{
-  "mode": "voice",
-  "WEATHER_API_KEY": "get from openweathermap.org",
-  "NEWS_API_KEY":    "get from newsapi.org",
-  "EMAIL":           "your-email@gmail.com",
-  "EMAIL_PASSWORD":  "your-gmail-app-password",
-  "default_city":    "Kolkata",
-  "language":        "en-in"
-}
-```
-
-| Key | Source | Required |
-|-----|--------|----------|
-| `WEATHER_API_KEY` | [openweathermap.org](https://openweathermap.org/api) | For weather |
-| `NEWS_API_KEY` | [newsapi.org](https://newsapi.org) | For headlines |
-| `EMAIL` + `EMAIL_PASSWORD` | Gmail App Password | For email |
-
-> 🔐 **Security:** Never commit your `config.json` with real keys. It's already in `.gitignore`.
-
----
-
-## 💬 Voice Commands Reference
-
-| Category | Say... | Action |
-|----------|--------|--------|
-| **Wikipedia** | `"Wikipedia artificial intelligence"` | Searches and reads summary |
-| **Weather** | `"Weather in Mumbai"` | Fetches live weather |
-| **News** | `"What's the news today"` | Reads 5 top headlines |
-| **Time** | `"What time is it"` | Tells current time |
-| **Date** | `"Today's date"` | Tells current date |
-| **Joke** | `"Tell me a joke"` | Tells a joke with timing |
-| **Motivation** | `"Motivate me"` | Gives an inspirational quote |
-| **Fact** | `"Tell me an interesting fact"` | Shares a random fact |
-| **Open Site** | `"Open YouTube"` | Opens in browser |
-| **YouTube** | `"Play lo-fi music on YouTube"` | Searches YouTube |
-| **Google** | `"Search Python tutorials"` | Opens Google search |
-| **Reminder** | `"Remind me to drink water"` | Sets threaded reminder |
-| **Alarm** | `"Set an alarm"` | Interactive alarm setter |
-| **Email** | `"Send email"` | Interactive email composer |
-| **Calculate** | `"What is 25 times 4"` | Evaluates math expression |
-| **Help** | `"What can you do"` | Lists capabilities |
-| **Exit** | `"Stop"` / `"Goodbye"` | Exits gracefully |
-
----
-
-## 📁 Project Structure
+## Layout
 
 ```
-SMART-VIRTUAL-ASSISTANT/
-│
-├── 📂 src/
-│   └── assistant.py          # Core engine (all modules)
-│
-├── 📂 config/
-│   └── config.json           # API keys & settings (gitignored)
-│
-├── 📂 docs/
-│   └── MINOR PROJECT REPORT 2.0.pdf
-│
-├── 📂 assets/
-│   └── screenshots/          # UI screenshots
-│
-├── requirements.txt          # Python dependencies
-├── .gitignore                # Excludes secrets & caches
-├── LICENSE                   # MIT License
-└── README.md                 # This file
+aria/
+  __main__.py      CLI entry point (python -m aria)
+  assistant.py     dialogue manager: pending slots, confirmations
+  skills.py        one function per intent
+  scheduler.py     reminders / alarms / timers on a single thread
+  speech.py        TTS worker thread, microphone listener
+  calc.py          safe spoken-arithmetic evaluator
+  config.py        settings from config.json + ARIA_* env vars
+  data.py          CLINC150 loading and intent mapping
+  train.py         trains models/intent_clf.joblib
+  nlu/
+    classifier.py  TF-IDF + LR/SVM, save/load, rejection threshold
+    rules.py       the original keyword router (kept as a baseline)
+    slots.py       regex slot extractors
+    intents.py     list of supported intents
+data/aria_extra.tsv  hand-written examples for intents CLINC doesn't have
+experiments/       benchmark + ASR noise simulation
+results/           benchmark output (json + figures)
+tests/             pytest suite, no network or audio needed
+docs/              results write-up, 2023 report and screenshots
 ```
 
----
+## Limitations and next steps
 
-## 🧠 How It Works
+- Evaluated on typed text (CLINC150) with *simulated* recognition errors. The
+  obvious next step is testing on real recordings, e.g. SLURP, or recording
+  people reading the test set through the actual STT.
+- English only. Hindi/Bengali-English code-mixing is a real gap for the
+  people this was originally meant for.
+- Speech recognition still goes to Google's free web API. Swapping in
+  an offline model (Vosk or whisper.cpp) would make the whole thing work
+  without internet.
+- The most common false accepts are near-misses like "what time is it in
+  Tokyo" being treated as plain `time`. More targeted negatives, or just
+  implementing time zones, would fix most of them.
+- Slots are regex-based. Fine for times and durations, weak for free-form
+  things like song titles.
 
-ARIA operates through a clean 4-stage pipeline:
+## History
 
-```
-1. LISTEN    →  Microphone input captured via SpeechRecognition
-2. RECOGNIZE →  Google STT converts audio to text string
-3. ROUTE     →  Intent matched via keyword patterns in route_command()
-4. RESPOND   →  Skill module executes → pyttsx3 speaks the result
-```
+The first version was built in April 2023 as the minor project for our
+B.Tech (IT) at KIIT, Bhubaneswar, by Aritro Acharya, Aranya Ghosh, Souvik
+Hazra and Rajdeep Ghosh, under the guidance of Mr. Madhabananda Das. The
+original report is in [docs/minor-project-report.pdf](docs/minor-project-report.pdf)
+and screenshots of that version are in [docs/screenshots](docs/screenshots).
 
-**Threaded Tasks** (reminders, alarms) run in background `daemon` threads — so ARIA keeps listening while waiting for a reminder trigger.
+Version 3 (this one) is a rewrite by Aranya Ghosh: the NLU pipeline,
+dialogue manager, scheduler and the CLINC150 experiments.
 
-**Modular Design** — each capability (Weather, News, Email, etc.) is an independent class. Adding a new skill is as simple as:
-1. Creating a new module class
-2. Adding an `elif` branch in `route_command()`
+## License
 
----
-
-## 🛠️ Technologies Used
-
-<div align="center">
-
-| Technology | Purpose |
-|:----------:|:-------:|
-| ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | Core language |
-| ![SpeechRecognition](https://img.shields.io/badge/SpeechRecognition-Google%20STT-4285F4?style=flat-square&logo=google&logoColor=white) | Voice input |
-| ![pyttsx3](https://img.shields.io/badge/pyttsx3-TTS%20Engine-orange?style=flat-square) | Voice output |
-| ![Wikipedia](https://img.shields.io/badge/Wikipedia-API-grey?style=flat-square&logo=wikipedia) | Knowledge base |
-| ![OpenWeatherMap](https://img.shields.io/badge/OpenWeatherMap-Weather%20API-orange?style=flat-square) | Live weather |
-| ![NewsAPI](https://img.shields.io/badge/NewsAPI-Headlines-darkblue?style=flat-square) | News feed |
-| ![Gmail SMTP](https://img.shields.io/badge/Gmail-SMTP-EA4335?style=flat-square&logo=gmail) | Email sending |
-| ![Threading](https://img.shields.io/badge/Python-Threading-blue?style=flat-square) | Async tasks |
-
-</div>
-
----
-
-## 🔮 Future Roadmap
-
-- [ ] 🧠 **LLM Integration** — Connect GPT/Gemini for open-ended conversation
-- [ ] 🖼️ **GUI Dashboard** — Tkinter or PyQt5 visual interface
-- [ ] 📱 **Mobile App** — Flask REST API + Android/iOS frontend
-- [ ] 🌐 **Multi-language Support** — Hindi, Bengali, and more
-- [ ] 🔌 **Smart Home** — Philips Hue, IFTTT webhook integration
-- [ ] 🎵 **Spotify Integration** — Music playback by voice
-- [ ] 📊 **Usage Analytics** — Local dashboard of command history
-- [ ] 🔒 **Voice Authentication** — Speaker recognition for security
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how to get started:
-
-```bash
-# Fork the repository
-# Create your feature branch
-git checkout -b feature/amazing-new-skill
-
-# Commit your changes
-git commit -m "feat: add amazing new skill"
-
-# Push to your branch
-git push origin feature/amazing-new-skill
-
-# Open a Pull Request 🎉
-```
-
-Please follow:
-- PEP 8 code style
-- Add docstrings to new modules
-- Update the Voice Commands table in README
-
----
-
-## 👩‍💻 Author
-
-<div align="center">
-
-**Aranya Ghosh**
-Student, KIIT University | Bhubaneswar, India
-
-[![GitHub](https://img.shields.io/badge/GitHub-Aranya2801-181717?style=for-the-badge&logo=github)](https://github.com/Aranya2801)
-
-*"Technology should be a bridge, not a barrier."*
-
-</div>
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
-
----
-
-<div align="center">
-
-⭐ **Star this repo if ARIA helped you!** ⭐
-
-*Made with ❤️ and Python 🐍*
-
-</div>
+MIT, see [LICENSE](LICENSE). CLINC150 is CC BY 3.0 and is downloaded at
+training time rather than included here.
